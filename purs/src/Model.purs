@@ -110,9 +110,9 @@ isRelated (TagCloudModeRelated _ _) = true
 isRelated _ = false
 
 setExpanded :: TagCloudModeF -> Boolean -> TagCloudModeF
-setExpanded (TagCloudModeTop e i) e' = TagCloudModeTop e' i
-setExpanded (TagCloudModeLowerBound e i) e' = TagCloudModeLowerBound e' i
-setExpanded (TagCloudModeRelated e i) e' = TagCloudModeRelated e' i
+setExpanded (TagCloudModeTop _ i) e' = TagCloudModeTop e' i
+setExpanded (TagCloudModeLowerBound _ i) e' = TagCloudModeLowerBound e' i
+setExpanded (TagCloudModeRelated _ i) e' = TagCloudModeRelated e' i
 setExpanded TagCloudModeNone _ = TagCloudModeNone
 
 showMode :: TagCloudModeF -> String
@@ -121,9 +121,18 @@ showMode (TagCloudModeLowerBound _ _)  = "lowerBound"
 showMode (TagCloudModeRelated _ _)  = "related"
 showMode TagCloudModeNone = ""
 
--- isSameMode :: TagCloudModeF -> TagCloudModeF -> Boolean
--- isSameMode (TagCloudModeTop _ _) (TagCloudModeTop _ _) = true
--- isSameMode (TagCloudModeLowerBound _ _) (TagCloudModeLowerBound _ _) = true
--- isSameMode (TagCloudModeRelated _ _) (TagCloudModeRelated _ _) = true
--- isSameMode TagCloudModeNone TagCloudModeNone = true
--- isSameMode _ _ = false
+type TagSuggestions = 
+  { query :: String
+  , suggestions :: Array TSuggestion
+  } 
+newtype TagSuggestions' = TagSuggestions' TagSuggestions
+derive newtype instance J.ReadForeign TagSuggestions'
+derive newtype instance J.WriteForeign TagSuggestions'
+
+type TSuggestion = 
+  { term :: String
+  , count :: Int
+  } 
+newtype TSuggestion' = TSuggestion' TSuggestion
+derive newtype instance J.ReadForeign TSuggestion'
+derive newtype instance J.WriteForeign TSuggestion'
